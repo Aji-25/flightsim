@@ -1831,7 +1831,7 @@ body {
   justify-content: center;
   background: radial-gradient(ellipse at 30% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
     radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-    var(--bg);
+    var(--bg-primary);
 }
 
 .login-card {

@@ -37,7 +37,7 @@ VALUES (
             NEW.raw_user_meta_data->>'display_name',
             split_part(NEW.email, '@', 1)
         ),
-        COALESCE(NEW.raw_user_meta_data->>'role', 'viewer')
+        'viewer' -- Always default to viewer; admins must be promoted manually
     );
 RETURN NEW;
 END;

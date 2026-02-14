@@ -69,18 +69,26 @@ async function getAccessToken() {
 async function fetchLiveStates() {
     const token = await getAccessToken();
 
-    // Fetch all states — no bounding box filter (global view)
-    const res = await fetch(`${OPENSKY_API_BASE}/states/all`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
 
-    if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`OpenSky API error (${res.status}): ${text}`);
+    try {
+        // Fetch all states — no bounding box filter (global view)
+        const res = await fetch(`${OPENSKY_API_BASE}/states/all`, {
+            headers: { 'Authorization': `Bearer ${token}` },
+            signal: controller.signal,
+        });
+
+        if (!res.ok) {
+            const text = await res.text();
+            throw new Error(`OpenSky API error (${res.status}): ${text}`);
+        }
+
+        const data = await res.json();
+        return data; // { time, states: [[icao24, callsign, ...], ...] }
+    } finally {
+        clearTimeout(timeout);
     }
-
-    const data = await res.json();
-    return data; // { time, states: [[icao24, callsign, ...], ...] }
 }
 
 // -----------------------------------------------

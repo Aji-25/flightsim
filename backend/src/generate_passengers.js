@@ -126,7 +126,13 @@ async function generatePassengers(count = 2000) {
         let email = generateEmail(first, last);
 
         // Ensure unique email
+        let attempts = 0;
         while (usedEmails.has(email)) {
+            if (++attempts > 100) {
+                // Fallback to prevent infinite loop
+                email = `${first.toLowerCase()}${Date.now()}${i}@${pick(EMAIL_DOMAINS)}`;
+                break;
+            }
             email = generateEmail(first, last);
         }
         usedEmails.add(email);

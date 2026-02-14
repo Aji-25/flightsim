@@ -32,7 +32,7 @@ async function fetchLiveFlights() {
     
     try {
         // 1. Fetch from AviationStack (Example)
-        const response = await axios.get('http://api.aviationstack.com/v1/flights', {
+        const response = await axios.get('https://api.aviationstack.com/v1/flights', {
             params: {
                 access_key: process.env.AVIATIONSTACK_KEY,
                 limit: 100,

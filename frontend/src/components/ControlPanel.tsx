@@ -43,13 +43,16 @@ export default function ControlPanel({ flights, onTriggerDelay, onTriggerScenari
         if (!scenario) return;
 
         setTriggeringScenario(id);
-        onTriggerScenario(id);
-
-        // Show Chaos Toast
-        setShowToast({ id: scenario.id, label: scenario.label, emoji: scenario.emoji });
-        setTimeout(() => setShowToast(null), 4000);
-
-        setTimeout(() => setTriggeringScenario(null), 2000);
+        try {
+            await onTriggerScenario(id);
+            // Show Chaos Toast
+            setShowToast({ id: scenario.id, label: scenario.label, emoji: scenario.emoji });
+            setTimeout(() => setShowToast(null), 4000);
+        } catch (err) {
+            console.error('Failed to trigger scenario:', err);
+        } finally {
+            setTimeout(() => setTriggeringScenario(null), 2000);
+        }
     };
 
     return (

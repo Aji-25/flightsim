@@ -162,7 +162,7 @@ LIMIT 1;
 IF v_flight_id IS NOT NULL THEN -- Random delay between 15 and 180 minutes
 v_delay := FLOOR(15 + (RANDOM() * 165))::INT;
 -- Random cause
-v_cause := v_causes [1 + FLOOR(RANDOM() * array_length(v_causes, 1))::INT];
+v_cause := v_causes [1 + (FLOOR(RANDOM() * array_length(v_causes, 1))::INT % array_length(v_causes, 1))];
 PERFORM calculate_blast_radius(v_flight_id, v_delay, v_cause, NULL, 0);
 RETURN QUERY
 SELECT v_flight_id,

@@ -698,10 +698,16 @@ app.get('/api/auth/me', async (req, res) => {
 // POST /api/auth/logout
 app.post('/api/auth/logout', async (req, res) => {
     try {
-        await supabase.auth.signOut();
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            const token = authHeader.replace('Bearer ', '');
+            // Best effort: Sign out using the user's token
+            await supabase.auth.signOut(token);
+        }
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: 'Logout failed' });
+        // Even if upstream fails, tell client to clear state
+        res.json({ success: true, warning: 'Upstream logout failed' });
     }
 });
 
@@ -1289,16 +1295,31 @@ app.post('/api/edge/chaos', requireAdmin, async (req, res) => {
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
-        const response = await fetch(`${supabaseUrl}/functions/v1/chaos-simulator`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${supabaseKey}`,
-            },
-            body: JSON.stringify(req.body),
-        });
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
 
-        const data = await response.json();
+        try {
+            const response = await fetch(`${supabaseUrl}/functions/v1/chaos-simulator`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${supabaseKey}`,
+                },
+                body: JSON.stringify(req.body),
+                signal: controller.signal,
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Edge Function error: ${text}`);
+            }
+
+            const data = await response.json();
+            // ... (rest of function)
+            res.json(data);
+        } finally {
+            clearTimeout(timeout);
+        }
 
         // Broadcast updated state
         const state = await fetchWorldState();
