@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { User } from '../types';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL;
+if (!API_URL) console.warn('⚠️ Missing VITE_API_URL! Requests will fail.');
 const TOKEN_KEY = 'warroom_token';
 
 interface AuthContextType {

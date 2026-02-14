@@ -60,7 +60,7 @@ export default function LoginPage() {
 
                 {signupSuccess && (
                     <div className="login-success">
-                        ✅ Account created! Check your email to confirm, then sign in.
+                        ✅ Account created! You can now sign in.
                     </div>
                 )}
 
