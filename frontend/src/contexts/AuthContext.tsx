@@ -1,7 +1,9 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { User } from '../types';
 
-const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+// HARDCODED FOR DEBUGGING - REVERT LATER IF NEEDED
+const API_URL = 'https://flightsim.onrender.com';
+// const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 if (!API_URL) console.warn('⚠️ Missing VITE_API_URL! Requests will fail.');
 const TOKEN_KEY = 'warroom_token';
 
