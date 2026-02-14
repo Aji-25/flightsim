@@ -675,18 +675,23 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // POST /api/auth/signup
+// POST /api/auth/signup
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { email, password, displayName } = req.body;
-        const { data, error } = await supabase.auth.signUp({
+        // Use admin.createUser to bypass email confirmation and rate limits
+        // The service_role key allows us to auto-confirm users immediately.
+        const { data: { user }, error } = await supabase.auth.admin.createUser({
             email,
             password,
-            options: {
-                data: { display_name: displayName || email.split('@')[0] },
-            },
+            email_confirm: true, // Auto-confirm email
+            user_metadata: { display_name: displayName || email.split('@')[0] }
         });
+
         if (error) throw error;
-        res.json({ user: data.user, message: 'Account created' });
+
+        // Return success (no session token needed as user will login manually)
+        res.json({ user, message: 'Account created' });
     } catch (err) {
         console.error('Signup error:', err);
         res.status(400).json({ error: err.message || 'Signup failed' });
