@@ -21,7 +21,7 @@ interface LiveFlight {
     updated_at: string;
 }
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'https://flightsim.onrender.com';
 const POLL_INTERVAL = 10_000;
 
 function createLiveIcon(heading: number | null): L.DivIcon {

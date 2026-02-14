@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { SnapshotSummary, Snapshot, Metrics } from '../types';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = 'https://flightsim.onrender.com';
 
 interface Props {
     onReplaySnapshot: (snapshot: Snapshot) => void;

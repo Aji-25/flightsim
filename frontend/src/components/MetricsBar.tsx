@@ -14,7 +14,7 @@ function formatCost(amount: number): string {
     return `$${amount.toLocaleString()}`;
 }
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'https://flightsim.onrender.com';
 
 export default function MetricsBar({ mode, metrics, costEstimate, connected }: Props) {
     const [showBreakdown, setShowBreakdown] = useState(false);

@@ -6,7 +6,7 @@ interface Props {
     events: DisruptionEvent[];
 }
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'https://flightsim.onrender.com';
 
 function getEventIcon(event: DisruptionEvent): string {
     if (event.passengers_impacted > 0) return '🔗';

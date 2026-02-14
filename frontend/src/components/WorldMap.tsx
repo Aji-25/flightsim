@@ -26,7 +26,7 @@ interface DelayRoute {
     arr_lng: number;
 }
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'https://flightsim.onrender.com';
 
 // Great-circle interpolation
 function interpolatePosition(
